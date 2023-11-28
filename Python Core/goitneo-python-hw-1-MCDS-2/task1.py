@@ -10,9 +10,7 @@ users = [
 ]
 
 def congratulate(users):
-    """
-    The function shows week days if there are any birthday from the list next week
-    """
+    """ The function shows week days if there are any birthday from the list next week"""
     final = defaultdict(list) # because the function returns a dict with default value list
     today = datetime.now()
     w = today.weekday()
