@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from collections import defaultdict
 
-Sasha_BD = datetime(year=1988, month=12, day=9)
+Sasha_BD = datetime(year=1988, month=12, day=15)
 Katya_BD = datetime(year=1996, month=12, day=5)
 
 users = [

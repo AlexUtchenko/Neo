@@ -73,7 +73,13 @@ def all(dict_base):
         return "The phonebook is empty"
 
 
-def handler(parsed, dict_base):
+def parser(string):
+    elements = [x.strip() for x in string.split(" ")]
+    elements[0] = elements[0].lower()
+    return elements
+
+
+def handler(parsed, book):
     command = parsed[0]
     if command == "hello":
         return "How can I help you?"
@@ -86,7 +92,7 @@ def handler(parsed, dict_base):
     if command == "phone":
         return show_phone(parsed, dict_base)
     if command == "all":
-        return all(dict_base)
+        return all(book)
     return "Invalid command."
 
 
