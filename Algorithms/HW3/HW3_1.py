@@ -1,5 +1,6 @@
 from pathlib import Path
 from collections import defaultdict
+import argparse
 
 
 TRANSFER_DICT = defaultdict(lambda: [])
@@ -62,24 +63,36 @@ def main(folder: Path, destination: Path):
 if __name__ == "__main__":
     # вітання
     print(f'\n{"*"*10:^50}Welcome to sorter app!{"*"*10:^50}\n')
+
+ 
+    # Створення парсера аргументів
+    parser = argparse.ArgumentParser(description="Програма для сортування файлів")
+
+    # Додавання аргументів
+    parser.add_argument("source", help="Шлях до джерельного файлу")
+    parser.add_argument("destination", help="Шлях до папки призначення")
+
+    # Отримання аргументів
+    args = parser.parse_args()
+
     # ввод, обробка і валідацію шляхів, введених користувачем
     while True:
-        folder = Path(input("Введіть теку, яку треба відсортувати \n>>> "))
+        folder = Path(args.source)
         if folder.is_dir():
-            break
-        else:
-            print("!!! Введіть вірний шлях до текі !!!")
-    while True:
-        try:
-            destination = input("Введіть теку, куди треба зберігти \n>>> ")
-            if not destination:
-                destination = Path.cwd() / "dist"
+            try:
+                destination = args.destination
+                if not destination:
+                    destination = Path.cwd() / "dist"
+                else:
+                    destination = Path(destination)
+                destination.mkdir()
+                break
+            except:
+                print("!!! Введіть вірний шлях до текі призначення !!!")
             else:
-                destination = Path(destination)
-            destination.mkdir()
-            break
-        except:
-            print("!!! Введіть вірний шлях до текі призначення !!!")
+                print("!!! Введіть коректний шлях !!!")
+
+
     if not destination.is_absolute():
         print(f"Введено відносний шлях:\n {Path.cwd() / destination.name}")
     # реалізація основної логіки на веріфікованих шляхаха
