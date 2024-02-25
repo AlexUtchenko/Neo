@@ -1,7 +1,10 @@
 import timeit
+import random
+import pandas as pd
 
 
 def insertion_sort(lst):
+    lst = lst[:]
     for i in range(1, len(lst)):
         key = lst[i]
         j = i-1
@@ -11,16 +14,11 @@ def insertion_sort(lst):
         lst[j+1] = key 
     return lst
 
-numbers = [5, 3, 8, 4, 2]
-print(insertion_sort(numbers))
-
 
 def merge(left, right):
     merged = []
     left_index = 0
     right_index = 0
-
-    # Спочатку об'єднайте менші елементи
     while left_index < len(left) and right_index < len(right):
         if left[left_index] <= right[right_index]:
             merged.append(left[left_index])
@@ -28,21 +26,17 @@ def merge(left, right):
         else:
             merged.append(right[right_index])
             right_index += 1
-
-    # Якщо в лівій або правій половині залишилися елементи, 
-		# додайте їх до результату
     while left_index < len(left):
         merged.append(left[left_index])
         left_index += 1
-
     while right_index < len(right):
         merged.append(right[right_index])
         right_index += 1
-
     return merged
 
 
 def merge_sort(arr):
+    arr = arr[:]
     if len(arr) <= 1:
         return arr
 
@@ -53,16 +47,27 @@ def merge_sort(arr):
     return merge(merge_sort(left_half), merge_sort(right_half))
 
 
-print(timeit.timeit(stmt='''
-def insertion_sort(lst):
-    for i in range(1, len(lst)):
-        key = lst[i]
-        j = i-1
-        while j >=0 and key < lst[j] :
-                lst[j+1] = lst[j]
-                j -= 1
-        lst[j+1] = key 
-    return lst
-''', setup='''
-lst=[1,2,4,5,3,2,2,5,6,3,2,2,3,4,5,6,6]
-''', number=1000))
+if __name__ == '__main__':
+    # генеруємо випадкові дані та засекаємо час
+    sizes = [10, 100, 1000, 10000]
+
+    t_ms = []
+    t_is = []
+    t_sd = []
+    t_s = []
+
+    for size in sizes: 
+        data = [random.randint(0, size) for _ in range(size)]
+        t_ms.append(timeit.timeit(lambda: merge_sort(data), number=30))
+        t_is.append(timeit.timeit(lambda: insertion_sort(data), number=30))
+        t_sd.append(timeit.timeit(lambda: sorted(data), number=30))
+        t_s.append(timeit.timeit(lambda: data.sort(), number=30))
+    
+    # створюємо таблицю результатів
+    df = pd.DataFrame({
+        'merge_sort': t_ms,
+        'insertion_sort': t_is,
+        'sorted': t_sd,
+        'sort': t_s
+    }, index=sizes)
+    print(df)
