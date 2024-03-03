@@ -14,9 +14,7 @@ def binary_search(arr, x):
     count = 0
  
     while low <= high:
-
         count += 1
- 
         mid = (high + low) // 2
  
         # якщо x більше за значення посередині списку, ігноруємо ліву половину
@@ -29,11 +27,13 @@ def binary_search(arr, x):
  
         # інакше x присутній на позиції і повертаємо його
         else:
-            return count, high
+            return count, arr[mid] if high - mid != 1 else arr[high]
  
     # якщо елемент не знайдений
-    return count, high
+    return count, -1
+
 
 l = [1.1, 5.3, 7.2, 10.23, 11.8, 25/2, 15.4, 90, 100]
-
-print(binary_search(l, 7.2))
+to_find = float(input('Enter a number: '))
+print(to_find)
+print(binary_search(l, to_find))
