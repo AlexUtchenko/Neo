@@ -30,7 +30,7 @@ def binary_search(arr, x):
             return count, arr[mid] if high - mid != 1 else arr[high]
  
     # якщо елемент не знайдений
-    return count, -1
+    return count, arr[low] if x < arr[-1] else -1
 
 
 l = [1.1, 5.3, 7.2, 10.23, 11.8, 25/2, 15.4, 90, 100]
