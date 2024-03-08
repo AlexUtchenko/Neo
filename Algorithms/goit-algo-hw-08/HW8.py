@@ -6,31 +6,23 @@
 '''
 
 import heapq
-import random
-random.seed(42)
+
 
 
 def min_cost_cable_connection(cables):
-    # Створюємо купу pq з кабелями, додаємо кабелі до купи з пріоритетом, де менша довжина має більший пріоритет.
-    pq = []
-    for cable in cables:
-        heapq.heappush(pq, (-cable, cable))
 
+    heapq.heapify(cables)
     min_cost = 0
-    pairs = []
 
-    # Витягуємо два кабелі з найвищим пріоритетом (a і b) з купи, об'єднуємо a і b в один кабель довжиною a + b, додаємо об'єднаний кабель до купи
-    while len(pq) > 1:
-        _, a = heapq.heappop(pq)
-        _, b = heapq.heappop(pq)
-
+    while len(cables) > 1:
+        a = heapq.heappop(cables)
+        b = heapq.heappop(cables)
         min_cost += a + b # min_cost буде сумою довжин усіх кабелів
-        heapq.heappush(pq, (-a - b, a + b))
 
     return min_cost
 
-# створимо набір кабелів різної довжини 20 шт від 1 до 100
-cables = [random.randint(1, 100) for _ in range(20)]
+
+cables = [1,2,3,4]
 print(cables)
 
 print(min_cost_cable_connection(cables))
