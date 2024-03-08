@@ -18,6 +18,7 @@ def min_cost_cable_connection(cables):
         a = heapq.heappop(cables)
         b = heapq.heappop(cables)
         min_cost += a + b # min_cost буде сумою довжин усіх кабелів
+        heapq.heappush(cables, a + b)
 
     return min_cost
 
