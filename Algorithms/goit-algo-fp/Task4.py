@@ -39,31 +39,8 @@ def draw_tree(tree_root):
     nx.draw(tree, pos=pos, labels=labels, arrows=False, node_size=2500, node_color=colors)
     plt.show()
 
-# функція для переводу графа в купу-масив
-def graph_to_heapified_list(root):
-    if root is None:
-        return []
-
-    queue = [root]
-    result = []
-
-    while queue:
-        node = queue.pop(0)
-        result.append(node.val)
-
-        if node.left:
-            queue.append(node.left)
-        if node.right:
-            queue.append(node.right)
-
-    result = [i * -1 for i in result]
-    heapq.heapify(result)
-    result = [i * -1 for i in result]
-
-    return result
-
 # функція створення графа-купи зі списка
-def create_heap(values):
+def build_heap_tree(values):
     new_graph = Node(min(values))
     values.remove(min(values))
 
@@ -98,20 +75,16 @@ def create_heap(values):
 
 if __name__ == "__main__":
 
-    # Створення дерева
-    root = Node(7)
-    root.left = Node(4)
-    root.left.left = Node(5)
-    root.left.right = Node(10)
-    root.right = Node(1)
-    root.right.left = Node(3)
+    # припустимо в нас є список, з якого хочемо побудувати купу
+    l = [4, 1, 3, 2, 16, 9, 10, 14, 8, 7]
+    print(l)
 
-    # Створення heapified list з нашого графа
-    hl = graph_to_heapified_list(root)
-    print(hl)
+    # cтворюємо heapified list з нашого списку
+    heapq.heapify(l)
+    print(l)
 
     # будуємо граф з heapified list
-    heap_from_graph = create_heap(hl)
+    heap_from_graph = build_heap_tree(l)
 
-    # Відображення графа-купи
+    # візуалізуємо цей граф
     draw_tree(heap_from_graph)
