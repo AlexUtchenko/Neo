@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from matplotlib import pyplot as plt
 import requests
 from collections import defaultdict, Counter
@@ -5,9 +6,18 @@ import string
 import re
 
 
-# Функція для видалення знаків пунктуації
+def get_text(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Перевірка на помилки HTTP
+        return response.text
+    except requests.RequestException as e:
+        return None
+
+
+# Функції підготовки тексту
 def remove_punctuation(text):
-    punctuation = string.punctuation.replace("'", "")
+    punctuation = string.punctuation
     return text.translate(str.maketrans("", "", punctuation))
 
 
@@ -48,7 +58,7 @@ def reduce_function(shuffled_values):
     return reduced
 
 
-# Виконання MapReduce
+# Функція для обробки тексту за допомогою MapReduce
 def map_reduce(text):
     # Крок 1: Обробка тексту
     processed_punctuation = remove_punctuation(text)
@@ -56,14 +66,21 @@ def map_reduce(text):
     processed_auxiliary_verbs = remove_auxiliary_verbs_and_prepositions(
         processed_prepositions
     )
-    processed_pronouns = remove_pronouns(processed_auxiliary_verbs)
+    processed = remove_pronouns(processed_auxiliary_verbs)
+
     # Крок 2: Мапінг
-    mapped_values = map_function(processed_pronouns)
+    with ThreadPoolExecutor() as executor:
+        mapped_values = list(executor.map(map_function, [processed]))
+
     # Крок 3: Shuffle
-    shuffled_values = shuffle_function(mapped_values)
-    # Крок 4: Редукція
-    reduced_values = reduce_function(shuffled_values)
-    return reduced_values
+    with ThreadPoolExecutor() as executor:
+        shuffled_values = list(executor.map(shuffle_function, mapped_values))
+
+    # Крок 4:Редукція
+    with ThreadPoolExecutor() as executor:
+        reduced_values = list(executor.map(reduce_function, shuffled_values))
+
+    return reduced_values[0]
 
 
 def visualize(result):
@@ -81,7 +98,7 @@ if __name__ == "__main__":
 
     # Завантаження тексту з сайту Gutenberg
     URL = "https://gutenberg.net.au/ebooks01/0100021.txt"
-    text = requests.get(URL).text
+    text = get_text(URL)
 
     # Виконання MapReduce на вхідному тексті
     result = map_reduce(text)
