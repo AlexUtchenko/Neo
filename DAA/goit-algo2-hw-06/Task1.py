@@ -74,3 +74,4 @@ if __name__ == "__main__":
     for password, status in results.items():
         display_pass = f"'{password}'" if password is not None else "None"
         print(f"Пароль {display_pass} — {status}.")
+
