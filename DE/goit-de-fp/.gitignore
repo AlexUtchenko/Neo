@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+checkpoints/
+part2_batch/data/
+stream.log
+spark-warehouse/
+metastore_db/
+derby.log
